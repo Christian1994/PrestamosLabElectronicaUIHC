@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Préstamos de Equipos de Laboratorio</title>
+            </f:facet>
+        </h:head>
+
+        <h:body>
+
+            <p:layout fullPage="true">
+
+                <p:layoutUnit position="north" size="80" resizable="true" closable="true" collapsible="true">
+                    PRÉSTAMOS DE EQUIPOS DE LABORATORIO
+                </p:layoutUnit>
+
+                <p:layoutUnit position="south" size="80" closable="true" collapsible="true">
+                    JOSÉ IGNACIO HERRERA MARTINEZ<p></p>
+                    ÁLVARO ANDRÉS LOAIZA DUQUE<p></p>
+                    CHRISTIAN DAVID NOREÑA VALENCIA<p></p>
+                    UVTULUA 2016
+                </p:layoutUnit>
+
+                <p:layoutUnit position="west" size="175" header="Left" collapsible="true">
+                    <h:form>
+                        <p:menu>
+                            <p:submenu label="Menú">
+                                <p:menuitem value="Demo" url="http://www.primefaces.org/showcase-labs/ui/home.jsf" />
+                                <p:menuitem value="Documentation" url="http://www.primefaces.org/documentation.html" />
+                                <p:menuitem value="Forum" url="http://forum.primefaces.org/" />
+                                <p:menuitem value="Themes" url="http://www.primefaces.org/themes.html" />
+                            </p:submenu>
+                        </p:menu>                        
+                    </h:form>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center">
+                    <h:form id="formulario">
+                        <p:growl id="growl" showDetail="true" sticky="true" escape="false"/>
+                        <p:panelGrid columns="6">
+                            <h:outputText value="Estudiante"/>                            
+                            <p:selectOneMenu id="cmbEstudiantes" binding="#{prestamoVista.cmbEstudiantes}">
+                                <f:selectItems value="#{prestamoVista.itemsEstudiantes}"/>
+                            </p:selectOneMenu>   
+                            <h:outputText value="Equipo"/>
+                            <p:selectOneMenu id="cmbEquipos" binding="#{prestamoVista.cmbEquipos}">
+                                <f:selectItems value="#{prestamoVista.itemsEquipos}"/>
+                            </p:selectOneMenu>
+                            <h:outputText value="Fecha Devolución"/>
+                            <p:calendar id="txtFechaDevolucion" value="#{prestamoVista.txtFechaDevolucion}" pattern="yyyy-MM-dd" locale="es" navigator="true" readonlyInput="true" 
+                                        required="true" requiredMessage="Campo Fecha Devolución Obligatorio."/>                            
+                            <h:outputText value="Observaciones"/>
+                            <p:inputTextarea binding="#{prestamoVista.txtObservaciones}"/>
+                        </p:panelGrid>
+                        <p:panelGrid columns="4">
+                            <p:commandButton value="Registrar" binding="#{prestamoVista.btnRegistrar}" action="#{prestamoVista.action_registrar()}" update=":formulario"/> 
+                            <p:commandButton value="Modificar" binding="#{prestamoVista.btnModificar}" action="#{prestamoVista.action_modificar()}" update=":formulario"/>
+                            <p:commandButton value="Eliminar" binding="#{prestamoVista.btnEliminar}" action="#{prestamoVista.action_eliminar()}" update=":formulario"/>
+                            <p:commandButton value="Limpiar" binding="#{prestamoVista.btnLimpiar}" action="#{prestamoVista.limpiar()}" update=":formulario"/>
+                        </p:panelGrid>
+                        <p:dataTable id="eventsDT" var="prestamo" value="#{prestamoVista.listaPrestamos}" selectionMode="single" selection="#{prestamoVista.selectedPrestamo}" rowKey="#{prestamo.prestamoPK}">
+                            <f:facet name="header">
+                                Préstamos
+                            </f:facet>
+                            <p:ajax event="rowSelect" listener="#{prestamoVista.onRowSelect}" update=":formulario" />
+
+                            <p:column headerText="Estudiante">
+                                <h:outputText value="#{prestamo.estudiante.nombre}" />
+                            </p:column>                            
+                            <p:column headerText="Equipo">
+                                <h:outputText value="#{prestamo.equipo.nombre}" />
+                            </p:column>                            
+                            <p:column headerText="Fecha Devolución">
+                                <h:outputText value="#{prestamo.fechadevolucion}">
+                                    <f:convertDateTime type="date" pattern="yyyy-MM-dd" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Observaciones">
+                                <h:outputText value="#{prestamo.observaciones}" />
+                            </p:column>                                                         
+                        </p:dataTable>                    
+                    </h:form>
+                </p:layoutUnit>
+
+            </p:layout>
+
+        </h:body>
+
+    </f:view>
+</html>
