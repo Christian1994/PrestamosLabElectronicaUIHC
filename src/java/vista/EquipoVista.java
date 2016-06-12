@@ -9,6 +9,8 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import modelo.Equipo;
 import org.primefaces.component.commandbutton.CommandButton;
 import org.primefaces.component.inputtext.InputText;
@@ -128,9 +130,9 @@ public class EquipoVista {
     }
 
     public void limpiar(){
-        this.txtReferencia.setValue(this.selectedEquipo.getReferencia());
-        this.txtNombre.setValue(this.selectedEquipo.getNombre());
-        this.cmbEstados.setValue(this.selectedEquipo.getEstado());
+        this.txtReferencia.setValue("");
+        this.txtNombre.setValue("");
+        this.cmbEstados.setValue("");
 
         this.txtReferencia.setReadonly(false);
         this.btnRegistrar.setDisabled(false);
@@ -139,15 +141,51 @@ public class EquipoVista {
     }
 
     public void action_registrar(){
+        Equipo objEquipo = new Equipo();
         
+        objEquipo.setReferencia(this.txtReferencia.getValue().toString());
+        objEquipo.setNombre(this.txtNombre.getValue().toString());
+        objEquipo.setEstado(this.cmbEstados.getValue().toString());
+        
+        equipoDAO.create(objEquipo);
+
+        inventario = null;
+        limpiar();
+        
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, 
+                "Información de registro de Equipos", "El Equipo fue registrado en el Inventario con éxito."));        
     }
     
     public void action_modificar(){
+        Equipo objEquipo = new Equipo();
         
+        objEquipo.setReferencia(this.txtReferencia.getValue().toString());
+        objEquipo.setNombre(this.txtNombre.getValue().toString());
+        objEquipo.setEstado(this.cmbEstados.getValue().toString());
+        
+        equipoDAO.edit(objEquipo);
+
+        inventario = null;
+        limpiar();
+        
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, 
+                "Información de modificación del registro de Equipos", "El registro de Equipo fue modificado con éxito."));        
     }
     
     public void action_eliminar(){
+        Equipo objEquipo = new Equipo();
         
+        objEquipo.setReferencia(this.txtReferencia.getValue().toString());
+        objEquipo.setNombre(this.txtNombre.getValue().toString());
+        objEquipo.setEstado(this.cmbEstados.getValue().toString());
+        
+        equipoDAO.remove(objEquipo);
+
+        inventario = null;
+        limpiar();
+        
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, 
+                "Información de eliminación de Equipos", "El Equipo fue eliminado del Inventario con éxito."));        
     }
     
     /**
