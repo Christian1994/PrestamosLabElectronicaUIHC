@@ -67,7 +67,7 @@
                             <p:commandButton value="Registrar" binding="#{estudianteVista.btnRegistrar}" action="#{estudianteVista.action_registrar()}" update=":formulario"/> 
                             <p:commandButton value="Modificar" binding="#{estudianteVista.btnModificar}" action="#{estudianteVista.action_modificar()}" update=":formulario"/>
                             <p:commandButton value="Eliminar" binding="#{estudianteVista.btnEliminar}" action="#{estudianteVista.action_eliminar()}" update=":formulario"/>
-                            <p:commandButton value="Limpiar" binding="#{estudianteVista.btnLimpiar}" action="#{estudianteVista.limpiar()}" update=":formulario"/>
+                            <p:commandButton value="Limpiar" binding="#{estudianteVista.btnLimpiar}" action="#{estudianteVista.limpiar()}" update=":formulario" immediate="true" resetValues="true"/>
                             <p:commandButton value="Cerrar Sesión" binding="#{sesionVista.btnCerrar}" action="#{sesionVista.action_cerrarSesion()}" update=":formulario" immediate="true"/>
                         </p:panelGrid>
                         <p:dataTable id="eventsDT" var="estudiante" value="#{estudianteVista.listaEstudiantes}" selectionMode="single" selection="#{estudianteVista.selectedEstudiante}" rowKey="#{estudiante.codigo}">

@@ -26,7 +26,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u"),
-    @NamedQuery(name = "Usuario.findByNombre", query = "SELECT u FROM Usuario u WHERE u.nombre = :nombre"),
+    @NamedQuery(name = "Usuario.findByIdUsuario", query = "SELECT u FROM Usuario u WHERE u.idUsuario = :idUsuario"),
+    @NamedQuery(name = "Usuario.findByNombrescompletos", query = "SELECT u FROM Usuario u WHERE u.nombrescompletos = :nombrescompletos"),
     @NamedQuery(name = "Usuario.findByTipo", query = "SELECT u FROM Usuario u WHERE u.tipo = :tipo"),
     @NamedQuery(name = "Usuario.findByClave", query = "SELECT u FROM Usuario u WHERE u.clave = :clave")})
 public class Usuario implements Serializable {
@@ -36,8 +37,13 @@ public class Usuario implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
-    @Column(name = "nombre")
-    private String nombre;
+    @Column(name = "idUsuario")
+    private String idUsuario;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 50)
+    @Column(name = "nombrescompletos")
+    private String nombrescompletos;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 11)
@@ -52,22 +58,31 @@ public class Usuario implements Serializable {
     public Usuario() {
     }
 
-    public Usuario(String nombre) {
-        this.nombre = nombre;
+    public Usuario(String idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
-    public Usuario(String nombre, String tipo, String clave) {
-        this.nombre = nombre;
+    public Usuario(String idUsuario, String nombrescompletos, String tipo, String clave) {
+        this.idUsuario = idUsuario;
+        this.nombrescompletos = nombrescompletos;
         this.tipo = tipo;
         this.clave = clave;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setIdUsuario(String idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public String getNombrescompletos() {
+        return nombrescompletos;
+    }
+
+    public void setNombrescompletos(String nombrescompletos) {
+        this.nombrescompletos = nombrescompletos;
     }
 
     public String getTipo() {
@@ -89,7 +104,7 @@ public class Usuario implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (nombre != null ? nombre.hashCode() : 0);
+        hash += (idUsuario != null ? idUsuario.hashCode() : 0);
         return hash;
     }
 
@@ -100,7 +115,7 @@ public class Usuario implements Serializable {
             return false;
         }
         Usuario other = (Usuario) object;
-        if ((this.nombre == null && other.nombre != null) || (this.nombre != null && !this.nombre.equals(other.nombre))) {
+        if ((this.idUsuario == null && other.idUsuario != null) || (this.idUsuario != null && !this.idUsuario.equals(other.idUsuario))) {
             return false;
         }
         return true;
@@ -108,7 +123,7 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        return "modelo.Usuario[ nombre=" + nombre + " ]";
+        return "modelo.Usuario[ idUsuario=" + idUsuario + " ]";
     }
     
 }
