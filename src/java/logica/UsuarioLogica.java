@@ -9,7 +9,6 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import modelo.Usuario;
-import org.apache.commons.codec.digest.DigestUtils;
 import persistencia.UsuarioFacadeLocal;
 
 /**
@@ -34,8 +33,6 @@ public class UsuarioLogica implements UsuarioLogicaLocal {
             throw new Exception("Usuario con ese nombre ya existe.");
         }
         else{
-            String claveEncriptada = this.encriptarClave(usuario.getClave());
-            usuario.setClave(claveEncriptada);
             usuarioDAO.create(usuario);
         }
     }
@@ -44,11 +41,6 @@ public class UsuarioLogica implements UsuarioLogicaLocal {
     public void modificarUsuario(Usuario usuario) throws Exception {
         if(usuario.getTipo().equals("Seleccione")){
             throw new Exception("Debes elegir el tipo de Usuario;");
-        }
-        
-        if(!usuario.getClave().equals("")){
-            String claveEncriptada = this.encriptarClave(usuario.getClave());
-            usuario.setClave(claveEncriptada);            
         }
         
         usuarioDAO.edit(usuario);
@@ -63,12 +55,8 @@ public class UsuarioLogica implements UsuarioLogicaLocal {
     public List<Usuario> consultarUsuarios() throws Exception {
         return usuarioDAO.findAll();
     }    
-
-    @Override
-    public String encriptarClave(String clave) throws Exception {
-        String claveEncriptada = DigestUtils.md5Hex(clave);
-        return claveEncriptada;
-    }
-
+    
+    // Add business logic below. (Right-click in editor and choose
+    // "Insert Code > Add Business Method")
 
 }

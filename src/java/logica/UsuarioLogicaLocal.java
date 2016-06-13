@@ -20,6 +20,5 @@ public interface UsuarioLogicaLocal {
     public void modificarUsuario(Usuario usuario) throws Exception;
     public void eliminarUsuario(Usuario usuario) throws Exception;
     public List<Usuario> consultarUsuarios() throws Exception;
-    public String encriptarClave(String clave) throws Exception;
     
 }

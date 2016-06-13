@@ -8,7 +8,6 @@ package logica;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import modelo.Usuario;
-import org.apache.commons.codec.digest.DigestUtils;
 import persistencia.UsuarioFacadeLocal;
 
 /**
@@ -30,8 +29,7 @@ public class SesionLogica implements SesionLogicaLocal {
         Usuario u = usuarioDAO.find(usuario);
         
         if(u != null){
-            String claveEncriptada = DigestUtils.md5Hex(clave);
-            if(!u.getClave().equals(claveEncriptada)){
+            if(!u.getClave().equals(clave)){
                 throw new Exception("Clave incorrecta.");
             }
         }
