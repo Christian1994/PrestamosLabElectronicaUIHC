@@ -47,12 +47,16 @@
                         <p:panelGrid columns="6">
                             <h:outputText value="Referencia"/>
                             <p:inputText id="txtReferencia" binding="#{equipoVista.txtReferencia}" required="true" 
-                                         requiredMessage="Campo Referencia Equipo Obligatorio." maxlength="11"/>
+                                         requiredMessage="Campo Referencia Equipo Obligatorio." maxlength="11"
+                                         validatorMessage="Campo Referencia debe ser numérico.">
+                                <f:validateRegex pattern="^[0-9]+$"/>
+                            </p:inputText>
                             <h:outputText value="Nombre"/>
                             <p:inputText id="txtNombre" binding="#{equipoVista.txtNombre}" required="true"
                                          requiredMessage="Campo Nombre Equipo Obligatorio." maxlength="20"/>
                             <h:outputText value="Estado"/>
                             <p:selectOneMenu id="cmbEstados" binding="#{equipoVista.cmbEstados}">
+                                <f:selectItem itemValue="Seleccione" itemLabel="Seleccione"/>
                                 <f:selectItem itemValue="Disponible" itemLabel="Disponible"/>
                                 <f:selectItem itemValue="Mantenimiento" itemLabel="Mantenimiento"/>
                                 <f:selectItem itemValue="Dañado" itemLabel="Dañado"/>
@@ -62,7 +66,7 @@
                             <p:commandButton value="Registrar" binding="#{equipoVista.btnRegistrar}" action="#{equipoVista.action_registrar()}" update=":formulario"/> 
                             <p:commandButton value="Modificar" binding="#{equipoVista.btnModificar}" action="#{equipoVista.action_modificar()}" update=":formulario"/>
                             <p:commandButton value="Eliminar" binding="#{equipoVista.btnEliminar}" action="#{equipoVista.action_eliminar()}" update=":formulario"/>
-                            <p:commandButton value="Limpiar" binding="#{equipoVista.btnLimpiar}" action="#{equipoVista.limpiar()}" update=":formulario" immediate="true"/>
+                            <p:commandButton value="Limpiar" binding="#{equipoVista.btnLimpiar}" action="#{equipoVista.limpiar()}" update=":formulario"/>
                             <p:commandButton value="Cerrar Sesión" binding="#{sesionVista.btnCerrar}" action="#{sesionVista.action_cerrarSesion()}" update=":formulario" immediate="true"/>
                         </p:panelGrid>
                         <p:dataTable id="eventsDT" var="equipo" value="#{equipoVista.inventario}" selectionMode="single" selection="#{equipoVista.selectedEquipo}" rowKey="#{equipo.referencia}">

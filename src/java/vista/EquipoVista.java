@@ -6,17 +6,19 @@
 package vista;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import logica.EquipoLogicaLocal;
 import modelo.Equipo;
 import org.primefaces.component.commandbutton.CommandButton;
 import org.primefaces.component.inputtext.InputText;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.event.SelectEvent;
-import persistencia.EquipoFacadeLocal;
 
 /**
  *
@@ -39,7 +41,7 @@ public class EquipoVista {
     private CommandButton btnLimpiar;
 
     @EJB
-    EquipoFacadeLocal equipoDAO;
+    private EquipoLogicaLocal equipoLogica;
     
     public InputText getTxtReferencia() {
         return txtReferencia;
@@ -67,7 +69,11 @@ public class EquipoVista {
 
     public List<Equipo> getInventario() {
         if(inventario == null){
-            inventario = equipoDAO.findAll();
+            try {
+                inventario = equipoLogica.consultarInventario();
+            } catch (Exception ex) {
+                Logger.getLogger(EquipoVista.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return inventario;
     }
@@ -141,51 +147,63 @@ public class EquipoVista {
     }
 
     public void action_registrar(){
-        Equipo objEquipo = new Equipo();
-        
-        objEquipo.setReferencia(this.txtReferencia.getValue().toString());
-        objEquipo.setNombre(this.txtNombre.getValue().toString());
-        objEquipo.setEstado(this.cmbEstados.getValue().toString());
-        
-        equipoDAO.create(objEquipo);
-
-        inventario = null;
-        limpiar();
-        
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, 
-                "Información de registro de Equipos", "El Equipo fue registrado en el Inventario con éxito."));        
+        try {
+            Equipo objEquipo = new Equipo();
+            
+            objEquipo.setReferencia(this.txtReferencia.getValue().toString());
+            objEquipo.setNombre(this.txtNombre.getValue().toString());
+            objEquipo.setEstado(this.cmbEstados.getValue().toString());
+            
+            equipoLogica.registrarEquipo(objEquipo);            
+            inventario = null;
+            limpiar();
+            
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,        
+                    "Información de registro de Equipos", "El Equipo fue registrado en el Inventario con éxito."));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,        
+                    "Error", ex.getMessage()));
+        }
     }
     
     public void action_modificar(){
-        Equipo objEquipo = new Equipo();
-        
-        objEquipo.setReferencia(this.txtReferencia.getValue().toString());
-        objEquipo.setNombre(this.txtNombre.getValue().toString());
-        objEquipo.setEstado(this.cmbEstados.getValue().toString());
-        
-        equipoDAO.edit(objEquipo);
-
-        inventario = null;
-        limpiar();
-        
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, 
-                "Información de modificación del registro de Equipos", "El registro de Equipo fue modificado con éxito."));        
+        try {
+            Equipo objEquipo = new Equipo();
+            
+            objEquipo.setReferencia(this.txtReferencia.getValue().toString());
+            objEquipo.setNombre(this.txtNombre.getValue().toString());
+            objEquipo.setEstado(this.cmbEstados.getValue().toString());
+            
+            equipoLogica.modificarEquipo(objEquipo);            
+            inventario = null;
+            limpiar();
+            
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,        
+                    "Información de modificación del registro de Equipos", "El registro de Equipo fue modificado con éxito."));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,        
+                    "Error", ex.getMessage()));
+        }
     }
     
     public void action_eliminar(){
-        Equipo objEquipo = new Equipo();
-        
-        objEquipo.setReferencia(this.txtReferencia.getValue().toString());
-        objEquipo.setNombre(this.txtNombre.getValue().toString());
-        objEquipo.setEstado(this.cmbEstados.getValue().toString());
-        
-        equipoDAO.remove(objEquipo);
-
-        inventario = null;
-        limpiar();
-        
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, 
-                "Información de eliminación de Equipos", "El Equipo fue eliminado del Inventario con éxito."));        
+        try {
+            Equipo objEquipo = new Equipo();
+            
+            objEquipo.setReferencia(this.txtReferencia.getValue().toString());
+            objEquipo.setNombre(this.txtNombre.getValue().toString());
+            objEquipo.setEstado(this.cmbEstados.getValue().toString());
+            
+            equipoLogica.eliminarEquipo(objEquipo);            
+            inventario = null;
+            limpiar();
+            
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,        
+                    "Información de eliminación de Equipos", "El Equipo fue eliminado del Inventario con éxito."));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,        
+                    "Error", ex.getMessage()));
+        }
     }
     
     /**

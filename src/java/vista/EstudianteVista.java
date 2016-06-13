@@ -6,17 +6,19 @@
 package vista;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import logica.EstudianteLogicaLocal;
 import modelo.Estudiante;
 import org.primefaces.component.commandbutton.CommandButton;
 import org.primefaces.component.inputtext.InputText;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.event.SelectEvent;
-import persistencia.EstudianteFacadeLocal;
 
 /**
  *
@@ -39,7 +41,7 @@ public class EstudianteVista {
     private CommandButton btnLimpiar;
 
     @EJB
-    EstudianteFacadeLocal estudianteDAO;
+    private EstudianteLogicaLocal estudianteLogica;
     
     public InputText getTxtCodigo() {
         return txtCodigo;
@@ -67,7 +69,11 @@ public class EstudianteVista {
 
     public List<Estudiante> getListaEstudiantes() {
         if(listaEstudiantes == null){
-            listaEstudiantes = estudianteDAO.findAll();
+            try {
+                listaEstudiantes = estudianteLogica.consultarEstudiantes();
+            } catch (Exception ex) {
+                Logger.getLogger(EstudianteVista.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return listaEstudiantes;
     }
@@ -141,51 +147,63 @@ public class EstudianteVista {
     }
 
     public void action_registrar(){
-        Estudiante objEstudiante = new Estudiante();
-        
-        objEstudiante.setCodigo(Integer.parseInt(this.txtCodigo.getValue().toString()));
-        objEstudiante.setNombre(this.txtNombre.getValue().toString());
-        objEstudiante.setPlan(this.cmbPlanes.getValue().toString());
-        
-        estudianteDAO.create(objEstudiante);
-
-        listaEstudiantes = null;
-        limpiar();
-        
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, 
-                "Información de registro de Estudiantes", "El Estudiante fue registrado con éxito."));        
+        try {
+            Estudiante objEstudiante = new Estudiante();
+            
+            objEstudiante.setCodigo(Integer.parseInt(this.txtCodigo.getValue().toString()));
+            objEstudiante.setNombre(this.txtNombre.getValue().toString());
+            objEstudiante.setPlan(this.cmbPlanes.getValue().toString());
+            
+            estudianteLogica.registrarEstudiante(objEstudiante);            
+            listaEstudiantes = null;
+            limpiar();
+            
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,        
+                    "Información de registro de Estudiantes", "El Estudiante fue registrado con éxito."));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,        
+                    "Error", ex.getMessage()));
+        }
     }
     
     public void action_modificar(){
-        Estudiante objEstudiante = new Estudiante();
-        
-        objEstudiante.setCodigo(Integer.parseInt(this.txtCodigo.getValue().toString()));
-        objEstudiante.setNombre(this.txtNombre.getValue().toString());
-        objEstudiante.setPlan(this.cmbPlanes.getValue().toString());
-        
-        estudianteDAO.edit(objEstudiante);
-
-        listaEstudiantes = null;
-        limpiar();
-        
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, 
-                "Información de modificación del registro de Estudiantes", "El registro de Estudiante fue modificado con éxito."));        
+        try {
+            Estudiante objEstudiante = new Estudiante();
+            
+            objEstudiante.setCodigo(Integer.parseInt(this.txtCodigo.getValue().toString()));
+            objEstudiante.setNombre(this.txtNombre.getValue().toString());
+            objEstudiante.setPlan(this.cmbPlanes.getValue().toString());
+            
+            estudianteLogica.modificarEstudiante(objEstudiante);            
+            listaEstudiantes = null;
+            limpiar();
+            
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,        
+                    "Información de modificación del registro de Estudiantes", "El registro de Estudiante fue modificado con éxito."));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,        
+                    "Error", ex.getMessage()));
+        }
     }
     
     public void action_eliminar(){
-        Estudiante objEstudiante = new Estudiante();
-        
-        objEstudiante.setCodigo(Integer.parseInt(this.txtCodigo.getValue().toString()));
-        objEstudiante.setNombre(this.txtNombre.getValue().toString());
-        objEstudiante.setPlan(this.cmbPlanes.getValue().toString());
-        
-        estudianteDAO.remove(objEstudiante);
-
-        listaEstudiantes = null;
-        limpiar();
-        
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, 
-                "Información de eliminación de registro Estudiantes", "El registro de Estudiante fue eliminado con éxito."));        
+        try {
+            Estudiante objEstudiante = new Estudiante();
+            
+            objEstudiante.setCodigo(Integer.parseInt(this.txtCodigo.getValue().toString()));
+            objEstudiante.setNombre(this.txtNombre.getValue().toString());
+            objEstudiante.setPlan(this.cmbPlanes.getValue().toString());
+            
+            estudianteLogica.eliminarEstudiante(objEstudiante);           
+            listaEstudiantes = null;
+            limpiar();
+            
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,        
+                    "Información de eliminación de registro Estudiantes", "El registro de Estudiante fue eliminado con éxito."));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,        
+                    "Error", ex.getMessage()));
+        }
     }    
     
     /**

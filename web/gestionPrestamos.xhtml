@@ -48,10 +48,12 @@
                         <p:panelGrid columns="6">
                             <h:outputText value="Estudiante"/>                            
                             <p:selectOneMenu id="cmbEstudiantes" binding="#{prestamoVista.cmbEstudiantes}">
+                                <f:selectItem itemValue="Seleccione" itemLabel="Seleccione"/>
                                 <f:selectItems value="#{prestamoVista.itemsEstudiantes}"/>
                             </p:selectOneMenu>   
                             <h:outputText value="Equipo"/>
                             <p:selectOneMenu id="cmbEquipos" binding="#{prestamoVista.cmbEquipos}">
+                                <f:selectItem itemValue="Seleccione" itemLabel="Seleccione"/>
                                 <f:selectItems value="#{prestamoVista.itemsEquipos}"/>
                             </p:selectOneMenu>
                             <h:outputText value="Fecha Devolución"/>
@@ -64,7 +66,7 @@
                             <p:commandButton value="Registrar" binding="#{prestamoVista.btnRegistrar}" action="#{prestamoVista.action_registrar()}" update=":formulario"/> 
                             <p:commandButton value="Modificar" binding="#{prestamoVista.btnModificar}" action="#{prestamoVista.action_modificar()}" update=":formulario"/>
                             <p:commandButton value="Eliminar" binding="#{prestamoVista.btnEliminar}" action="#{prestamoVista.action_eliminar()}" update=":formulario"/>
-                            <p:commandButton value="Limpiar" binding="#{prestamoVista.btnLimpiar}" action="#{prestamoVista.limpiar()}" update=":formulario" immediate="true"/>
+                            <p:commandButton value="Limpiar" binding="#{prestamoVista.btnLimpiar}" action="#{prestamoVista.limpiar()}" update=":formulario"/>
                             <p:commandButton value="Cerrar Sesión" binding="#{sesionVista.btnCerrar}" action="#{sesionVista.action_cerrarSesion()}" update=":formulario" immediate="true"/>
                         </p:panelGrid>
                         <p:dataTable id="eventsDT" var="prestamo" value="#{prestamoVista.listaPrestamos}" selectionMode="single" selection="#{prestamoVista.selectedPrestamo}" rowKey="#{prestamo.prestamoPK}">
@@ -75,7 +77,10 @@
 
                             <p:column headerText="Estudiante">
                                 <h:outputText value="#{prestamo.estudiante.nombre}" />
-                            </p:column>                            
+                            </p:column>
+                            <p:column headerText="Referencia">
+                                <h:outputText value="#{prestamo.equipo.referencia}" />
+                            </p:column>                             
                             <p:column headerText="Equipo">
                                 <h:outputText value="#{prestamo.equipo.nombre}" />
                             </p:column>                            

@@ -8,6 +8,8 @@ package vista;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
@@ -22,9 +24,9 @@ import org.primefaces.component.commandbutton.CommandButton;
 import org.primefaces.component.inputtextarea.InputTextarea;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.event.SelectEvent;
-import persistencia.EquipoFacadeLocal;
-import persistencia.EstudianteFacadeLocal;
-import persistencia.PrestamoFacadeLocal;
+import logica.EquipoLogicaLocal;
+import logica.EstudianteLogicaLocal;
+import logica.PrestamoLogicaLocal;
 
 /**
  *
@@ -52,13 +54,13 @@ public class PrestamoVista {
     private CommandButton btnLimpiar;    
     
     @EJB
-    private EstudianteFacadeLocal estudianteDAO;
+    private EstudianteLogicaLocal estudianteLogica;
     
     @EJB
-    private EquipoFacadeLocal equipoDAO;
+    private EquipoLogicaLocal equipoLogica;
     
     @EJB
-    private PrestamoFacadeLocal prestamoDAO;
+    private PrestamoLogicaLocal prestamoLogica;
     
     public SelectOneMenu getCmbEstudiantes() {
         return cmbEstudiantes;
@@ -69,13 +71,17 @@ public class PrestamoVista {
     }
 
     public ArrayList<SelectItem> getItemsEstudiantes() {
-        List<Estudiante> itemsEs = estudianteDAO.findAll();
-        this.itemsEstudiantes = new ArrayList<>();
-        
-        itemsEs.stream().forEach((es) -> {
-            this.itemsEstudiantes.add(new SelectItem(es.getCodigo(), es.getNombre()));
-        });
-        
+        try {
+            List<Estudiante> itemsEs = estudianteLogica.consultarEstudiantes();
+            this.itemsEstudiantes = new ArrayList<>();
+            
+            itemsEs.stream().forEach((es) -> {
+                this.itemsEstudiantes.add(new SelectItem(es.getCodigo(), es.getNombre()));
+            });            
+        } catch (Exception ex) {
+            Logger.getLogger(PrestamoVista.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         return itemsEstudiantes;
     }
 
@@ -92,14 +98,18 @@ public class PrestamoVista {
     }
 
     public ArrayList<SelectItem> getItemsEquipos() {
-        List<Equipo> itemsEq = equipoDAO.findAll();
-        this.itemsEquipos = new ArrayList<>();
+        try {
+            List<Equipo> itemsEq = equipoLogica.consultarInventario();
+            this.itemsEquipos = new ArrayList<>();
+            
+            itemsEq.stream().forEach((eq) -> {
+                this.itemsEquipos.add(new SelectItem(eq.getReferencia(), eq.getNombre()));
+            });            
+        } catch (Exception ex) {
+            Logger.getLogger(PrestamoVista.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
-        itemsEq.stream().forEach((eq) -> {
-            this.itemsEquipos.add(new SelectItem(eq.getReferencia(), eq.getNombre()));
-        });
-        
-        return itemsEquipos;
+        return itemsEquipos;        
     }
 
     public void setItemsEquipos(ArrayList<SelectItem> itemsEquipos) {
@@ -124,7 +134,11 @@ public class PrestamoVista {
 
     public List<Prestamo> getListaPrestamos() {
         if(listaPrestamos == null){
-            listaPrestamos = prestamoDAO.findAll();
+            try {
+                listaPrestamos = prestamoLogica.consultarPrestamos();
+            } catch (Exception ex) {
+                Logger.getLogger(PrestamoVista.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return listaPrestamos;
     }
@@ -181,8 +195,8 @@ public class PrestamoVista {
         this.txtFechaDevolucion = this.selectedPrestamo.getFechadevolucion();
         this.txtObservaciones.setValue(this.selectedPrestamo.getObservaciones());
         
-        this.cmbEstudiantes.setReadonly(true);
-        this.cmbEquipos.setReadonly(true);
+        this.cmbEstudiantes.setDisabled(true);
+        this.cmbEquipos.setDisabled(true);
         this.btnRegistrar.setDisabled(true);
         this.btnModificar.setDisabled(false);
         this.btnEliminar.setDisabled(false);        
@@ -194,80 +208,95 @@ public class PrestamoVista {
         this.txtFechaDevolucion = null;
         this.txtObservaciones.setValue("");
         
-        this.cmbEstudiantes.setReadonly(true);
-        this.cmbEquipos.setReadonly(true);
-        this.btnRegistrar.setDisabled(true);
-        this.btnModificar.setDisabled(false);
-        this.btnEliminar.setDisabled(false);        
+        this.cmbEstudiantes.setDisabled(false);
+        this.cmbEquipos.setDisabled(false);
+        this.btnRegistrar.setDisabled(false);
+        this.btnModificar.setDisabled(true);
+        this.btnEliminar.setDisabled(true);        
     }
     
     public void action_registrar(){
-        Estudiante objEstudiante = new Estudiante();
-        objEstudiante.setCodigo(Integer.parseInt(this.cmbEstudiantes.getValue().toString()));
-        
-        Equipo objEquipo = new Equipo();
-        objEquipo.setReferencia(this.cmbEquipos.getValue().toString());
-        
-        Prestamo objPrestamo = new Prestamo();
-        PrestamoPK objPrestamoPK = new PrestamoPK(objEstudiante.getCodigo(), objEquipo.getReferencia());
-        objPrestamo.setPrestamoPK(objPrestamoPK);
-        objPrestamo.setEstudiante(objEstudiante);
-        objPrestamo.setEquipo(objEquipo);
-        objPrestamo.setFechadevolucion(txtFechaDevolucion);
-        objPrestamo.setObservaciones(this.txtObservaciones.getValue().toString());
-        
-        prestamoDAO.create(objPrestamo);
-        listaPrestamos = null;
-        limpiar();
-        
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, 
-                "Información de registro de Préstamo", "El Préstamo fue registrado con éxito."));        
+        try {
+            Estudiante objEstudiante = new Estudiante();
+            objEstudiante.setCodigo(Integer.parseInt(this.cmbEstudiantes.getValue().toString()));
+            
+            Equipo objEquipo = new Equipo();
+            objEquipo.setReferencia(this.cmbEquipos.getValue().toString());
+            
+            Prestamo objPrestamo = new Prestamo();
+            PrestamoPK objPrestamoPK = new PrestamoPK(objEstudiante.getCodigo(), objEquipo.getReferencia());
+            objPrestamo.setPrestamoPK(objPrestamoPK);
+            objPrestamo.setEstudiante(objEstudiante);
+            objPrestamo.setEquipo(objEquipo);
+            objPrestamo.setFechadevolucion(txtFechaDevolucion);
+            objPrestamo.setObservaciones(this.txtObservaciones.getValue().toString());
+            
+            prestamoLogica.registrarPrestamo(objPrestamo);
+            listaPrestamos = null;
+            limpiar();
+            
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,        
+                    "Información de registro de Préstamo", "El Préstamo fue registrado con éxito."));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,        
+                    "Error", ex.getMessage()));
+        }
     }
     
     public void action_modificar(){
-        Estudiante objEstudiante = new Estudiante();
-        objEstudiante.setCodigo(Integer.parseInt(this.cmbEstudiantes.getValue().toString()));
-        
-        Equipo objEquipo = new Equipo();
-        objEquipo.setReferencia(this.cmbEquipos.getValue().toString());
-        
-        Prestamo objPrestamo = new Prestamo();
-        PrestamoPK objPrestamoPK = new PrestamoPK(objEstudiante.getCodigo(), objEquipo.getReferencia());
-        objPrestamo.setPrestamoPK(objPrestamoPK);
-        objPrestamo.setEstudiante(objEstudiante);
-        objPrestamo.setEquipo(objEquipo);
-        objPrestamo.setFechadevolucion(txtFechaDevolucion);
-        objPrestamo.setObservaciones(this.txtObservaciones.getValue().toString());
-        
-        prestamoDAO.edit(objPrestamo);
-        listaPrestamos = null;
-        limpiar();
-
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, 
-                "Información de modificación de Préstamo", "El Préstamo fue modificado con éxito."));        
+        try {
+            Estudiante objEstudiante = new Estudiante();
+            objEstudiante.setCodigo(Integer.parseInt(this.cmbEstudiantes.getValue().toString()));
+            
+            Equipo objEquipo = new Equipo();
+            objEquipo.setReferencia(this.cmbEquipos.getValue().toString());
+            
+            Prestamo objPrestamo = new Prestamo();
+            PrestamoPK objPrestamoPK = new PrestamoPK(objEstudiante.getCodigo(), objEquipo.getReferencia());
+            objPrestamo.setPrestamoPK(objPrestamoPK);
+            objPrestamo.setEstudiante(objEstudiante);
+            objPrestamo.setEquipo(objEquipo);
+            objPrestamo.setFechadevolucion(txtFechaDevolucion);
+            objPrestamo.setObservaciones(this.txtObservaciones.getValue().toString());
+            
+            prestamoLogica.modificarPrestamo(objPrestamo);
+            listaPrestamos = null;
+            limpiar();
+            
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,        
+                    "Información de modificación de Préstamo", "El Préstamo fue modificado con éxito."));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,        
+                    "Error", ex.getMessage()));
+        }
     }
     
     public void action_eliminar(){
-        Estudiante objEstudiante = new Estudiante();
-        objEstudiante.setCodigo(Integer.parseInt(this.cmbEstudiantes.getValue().toString()));
-        
-        Equipo objEquipo = new Equipo();
-        objEquipo.setReferencia(this.cmbEquipos.getValue().toString());
-        
-        Prestamo objPrestamo = new Prestamo();
-        PrestamoPK objPrestamoPK = new PrestamoPK(objEstudiante.getCodigo(), objEquipo.getReferencia());
-        objPrestamo.setPrestamoPK(objPrestamoPK);
-        objPrestamo.setEstudiante(objEstudiante);
-        objPrestamo.setEquipo(objEquipo);
-        objPrestamo.setFechadevolucion(txtFechaDevolucion);
-        objPrestamo.setObservaciones(this.txtObservaciones.getValue().toString());
-        
-        prestamoDAO.remove(objPrestamo);
-        listaPrestamos = null;
-        limpiar();
-
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, 
-                "Información de eliminación de Préstamo", "El Préstamo fue eliminado con éxito."));        
+        try {
+            Estudiante objEstudiante = new Estudiante();
+            objEstudiante.setCodigo(Integer.parseInt(this.cmbEstudiantes.getValue().toString()));
+            
+            Equipo objEquipo = new Equipo();
+            objEquipo.setReferencia(this.cmbEquipos.getValue().toString());
+            
+            Prestamo objPrestamo = new Prestamo();
+            PrestamoPK objPrestamoPK = new PrestamoPK(objEstudiante.getCodigo(), objEquipo.getReferencia());
+            objPrestamo.setPrestamoPK(objPrestamoPK);
+            objPrestamo.setEstudiante(objEstudiante);
+            objPrestamo.setEquipo(objEquipo);
+            objPrestamo.setFechadevolucion(txtFechaDevolucion);
+            objPrestamo.setObservaciones(this.txtObservaciones.getValue().toString());
+            
+            prestamoLogica.eliminarPrestamo(objPrestamo);
+            listaPrestamos = null;
+            limpiar();
+            
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,        
+                    "Información de eliminación de Préstamo", "El Préstamo fue eliminado con éxito."));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,        
+                    "Error", ex.getMessage()));
+        }
     }
     
     /**
