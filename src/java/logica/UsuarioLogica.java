@@ -40,7 +40,7 @@ public class UsuarioLogica implements UsuarioLogicaLocal {
     @Override
     public void modificarUsuario(Usuario usuario) throws Exception {
         if(usuario.getTipo().equals("Seleccione")){
-            throw new Exception("Debes elegir el tipo de Usuario;");
+            throw new Exception("Debes elegir el tipo de Usuario.");
         }
         
         usuarioDAO.edit(usuario);

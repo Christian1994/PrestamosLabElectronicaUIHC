@@ -55,8 +55,8 @@
                         <p:separator/>
                         <p:panelGrid columns="5">
                             <p:commandButton value="Registrar" binding="#{usuarioVista.btnRegistrar}" action="#{usuarioVista.action_registrar()}" update=":formulario"/> 
-                            <p:commandButton value="Modificar" binding="#{usuarioVista.btnModificar}" action="#{usuarioVista.action_modificar()}" update=":formulario"/>
-                            <p:commandButton value="Eliminar" binding="#{usuarioVista.btnEliminar}" action="#{usuarioVista.action_eliminar()}" update=":formulario"/>
+                            <p:commandButton value="Modificar" binding="#{usuarioVista.btnModificar}" action="#{usuarioVista.action_modificar()}" update=":formulario" disabled="true"/>
+                            <p:commandButton value="Eliminar" binding="#{usuarioVista.btnEliminar}" action="#{usuarioVista.action_eliminar()}" update=":formulario" disabled="true"/>
                             <p:commandButton value="Limpiar" binding="#{usuarioVista.btnLimpiar}" action="#{usuarioVista.limpiar()}" update=":formulario" immediate="true" resetValues="true"/>
                             <p:commandButton value="Cerrar Sesión" binding="#{sesionVista.btnCerrar}" action="#{sesionVista.action_cerrarSesion()}" update=":formulario" immediate="true"/>
                         </p:panelGrid>
