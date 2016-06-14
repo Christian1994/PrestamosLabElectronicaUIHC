@@ -48,8 +48,9 @@ public class EquipoLogica implements EquipoLogicaLocal {
         if(objEquipo.getPrestamoList().size() > 0){
             throw new Exception("No se puede modificar la información del Equipo hasta que éste sea devuelto.");
         }
-        
-        equipoDAO.edit(equipo);
+        else{
+            equipoDAO.edit(equipo);            
+        }
     }
 
     @Override
