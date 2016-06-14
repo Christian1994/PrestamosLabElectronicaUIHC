@@ -18,34 +18,20 @@
             <p:layout fullPage="true">
 
                 <p:layoutUnit position="north" size="80" resizable="true" closable="true" collapsible="true">
-                    PRÉSTAMOS DE EQUIPOS DE LABORATORIO<p></p>
-                    <h:outputText value="Hola"/>
-                </p:layoutUnit>
-
-                <p:layoutUnit position="south" size="80" closable="true" collapsible="true">
-                    JOSÉ IGNACIO HERRERA MARTINEZ<p></p>
-                    ÁLVARO ANDRÉS LOAIZA DUQUE<p></p>
-                    CHRISTIAN DAVID NOREÑA VALENCIA<p></p>
-                    UVTULUA 2016
-                </p:layoutUnit>
-
-                <p:layoutUnit position="west" size="175" header="Left" collapsible="true">
-                    <h:form>
-                        <p:menu>
-                            <p:submenu label="Menú">
-                                <p:menuitem value="Demo" url="http://www.primefaces.org/showcase-labs/ui/home.jsf" />
-                                <p:menuitem value="Documentation" url="http://www.primefaces.org/documentation.html" />
-                                <p:menuitem value="Forum" url="http://forum.primefaces.org/" />
-                                <p:menuitem value="Themes" url="http://www.primefaces.org/themes.html" />
-                            </p:submenu>
-                        </p:menu>                        
-                    </h:form>
+                    PRÉSTAMOS DE EQUIPOS DE LABORATORIO
                 </p:layoutUnit>
 
                 <p:layoutUnit position="center">
                     <h:form id="formulario">
+                        <p:menubar>
+                            <p:menuitem value="Equipos" url="/aplicativo/gestionEquipos.xhtml"/>
+                            <p:menuitem value="Estudiantes" url="/aplicativo/gestionEstudiantes.xhtml"/>
+                            <p:menuitem value="Préstamos" url="/aplicativo/gestionPrestamos.xhtml"/>
+                            <p:menuitem value="Usuarios" url="/aplicativo/gestionUsuarios.xhtml"/>
+                        </p:menubar>
+                        <p:separator/>                        
                         <p:growl id="growl" showDetail="true" sticky="true" escape="false"/>
-                        <p:panelGrid columns="6">
+                        <p:panelGrid columns="4">
                             <h:outputText value="Estudiante"/>                            
                             <p:selectOneMenu id="cmbEstudiantes" binding="#{prestamoVista.cmbEstudiantes}">
                                 <f:selectItem itemValue="Seleccione" itemLabel="Seleccione"/>
@@ -62,6 +48,7 @@
                             <h:outputText value="Observaciones"/>
                             <p:inputTextarea binding="#{prestamoVista.txtObservaciones}"/>
                         </p:panelGrid>
+                        <p:separator/>
                         <p:panelGrid columns="5">
                             <p:commandButton value="Registrar" binding="#{prestamoVista.btnRegistrar}" action="#{prestamoVista.action_registrar()}" update=":formulario"/> 
                             <p:commandButton value="Modificar" binding="#{prestamoVista.btnModificar}" action="#{prestamoVista.action_modificar()}" update=":formulario"/>
@@ -69,6 +56,7 @@
                             <p:commandButton value="Limpiar" binding="#{prestamoVista.btnLimpiar}" action="#{prestamoVista.limpiar()}" update=":formulario" immediate="true" resetValues="true"/>
                             <p:commandButton value="Cerrar Sesión" binding="#{sesionVista.btnCerrar}" action="#{sesionVista.action_cerrarSesion()}" update=":formulario" immediate="true"/>
                         </p:panelGrid>
+                        <p:separator/>
                         <p:dataTable id="eventsDT" var="prestamo" value="#{prestamoVista.listaPrestamos}" selectionMode="single" selection="#{prestamoVista.selectedPrestamo}" rowKey="#{prestamo.prestamoPK}">
                             <f:facet name="header">
                                 Préstamos

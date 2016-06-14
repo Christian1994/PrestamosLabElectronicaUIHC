@@ -21,30 +21,17 @@
                     ESTUDIANTES
                 </p:layoutUnit>
 
-                <p:layoutUnit position="south" size="80" closable="true" collapsible="true">
-                    JOSÉ IGNACIO HERRERA MARTINEZ<p></p>
-                    ÁLVARO ANDRÉS LOAIZA DUQUE<p></p>
-                    CHRISTIAN DAVID NOREÑA VALENCIA<p></p>
-                    UVTULUA 2016
-                </p:layoutUnit>
-
-                <p:layoutUnit position="west" size="175" header="Left" collapsible="true">
-                    <h:form>
-                        <p:menu>
-                            <p:submenu label="Menú">
-                                <p:menuitem value="Demo" url="http://www.primefaces.org/showcase-labs/ui/home.jsf" />
-                                <p:menuitem value="Documentation" url="http://www.primefaces.org/documentation.html" />
-                                <p:menuitem value="Forum" url="http://forum.primefaces.org/" />
-                                <p:menuitem value="Themes" url="http://www.primefaces.org/themes.html" />
-                            </p:submenu>
-                        </p:menu>                        
-                    </h:form>
-                </p:layoutUnit>
-
                 <p:layoutUnit position="center">
                     <h:form id="formulario">
+                        <p:menubar>
+                            <p:menuitem value="Equipos" url="/aplicativo/gestionEquipos.xhtml"/>
+                            <p:menuitem value="Estudiantes" url="/aplicativo/gestionEstudiantes.xhtml"/>
+                            <p:menuitem value="Préstamos" url="/aplicativo/gestionPrestamos.xhtml"/>
+                            <p:menuitem value="Usuarios" url="/aplicativo/gestionUsuarios.xhtml"/>
+                        </p:menubar>
+                        <p:separator/>                        
                         <p:growl id="growl" showDetail="true" sticky="true" escape="false"/>
-                        <p:panelGrid columns="6">
+                        <p:panelGrid columns="2">
                             <h:outputText value="Código"/>
                             <p:inputText id="txtCodigo" binding="#{estudianteVista.txtCodigo}" required="true" 
                                          requiredMessage="Campo Código Estudiante Obligatorio." 
@@ -63,6 +50,7 @@
                                 <f:selectItem itemValue="3743" itemLabel="3743"/>
                             </p:selectOneMenu>
                         </p:panelGrid>
+                        <p:separator/>
                         <p:panelGrid columns="5">
                             <p:commandButton value="Registrar" binding="#{estudianteVista.btnRegistrar}" action="#{estudianteVista.action_registrar()}" update=":formulario"/> 
                             <p:commandButton value="Modificar" binding="#{estudianteVista.btnModificar}" action="#{estudianteVista.action_modificar()}" update=":formulario"/>
@@ -70,6 +58,7 @@
                             <p:commandButton value="Limpiar" binding="#{estudianteVista.btnLimpiar}" action="#{estudianteVista.limpiar()}" update=":formulario" immediate="true" resetValues="true"/>
                             <p:commandButton value="Cerrar Sesión" binding="#{sesionVista.btnCerrar}" action="#{sesionVista.action_cerrarSesion()}" update=":formulario" immediate="true"/>
                         </p:panelGrid>
+                        <p:separator/>
                         <p:dataTable id="eventsDT" var="estudiante" value="#{estudianteVista.listaEstudiantes}" selectionMode="single" selection="#{estudianteVista.selectedEstudiante}" rowKey="#{estudiante.codigo}">
                             <f:facet name="header">
                                 Estudiantes
