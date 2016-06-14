@@ -15,7 +15,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>/faces/*</url-pattern>
+        <url-pattern>/aplicativo/*</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
@@ -23,6 +23,37 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>faces/login.xhtml</welcome-file>
+        <welcome-file>aplicativo/login.xhtml</welcome-file>
     </welcome-file-list>
+    
+    <filter>
+        <filter-name>AuxiliarFiltro</filter-name>
+        <filter-class>filtro.AuxiliarFiltro</filter-class>
+    </filter>   
+    <filter-mapping>
+        <filter-name>AuxiliarFiltro</filter-name>
+        <url-pattern>/aplicativo/gestionEquipos.xhtml</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuxiliarFiltro</filter-name>
+        <url-pattern>/aplicativo/gestionEstudiantes.xhtml</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuxiliarFiltro</filter-name>
+        <url-pattern>/aplicativo/gestionUsuarios.xhtml</url-pattern>
+    </filter-mapping>
+                
+    <filter>
+        <filter-name>MonitorFiltro</filter-name>
+        <filter-class>filtro.MonitorFiltro</filter-class>
+    </filter>
+    
+    <filter>
+        <filter-name>IndexFiltro</filter-name>
+        <filter-class>filtro.IndexFiltro</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>IndexFiltro</filter-name>
+        <url-pattern>/aplicativo/login.xhtml</url-pattern>
+    </filter-mapping>              
 </web-app>

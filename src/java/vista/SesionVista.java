@@ -69,12 +69,11 @@ public class SesionVista {
     }    
 
     public void funcion_ingresar(){
-        try {
-            String url;
-            
+        try {            
             FacesContext context = FacesContext.getCurrentInstance();
             ExternalContext extContext = context.getExternalContext();
-            url = extContext.encodeActionURL(context.getApplication().getViewHandler().getActionURL(context, "/gestionPrestamos.xhtml"));
+            String urlAuxiliar = extContext.encodeActionURL(context.getApplication().getViewHandler().getActionURL(context, "/gestionEquipos.xhtml"));
+            String urlMonitor = extContext.encodeActionURL(context.getApplication().getViewHandler().getActionURL(context, "/gestionPrestamos.xhtml"));
             
             String usuario = txtUsuario.getValue().toString();
             String clave = txtClave.getValue().toString();
@@ -83,13 +82,13 @@ public class SesionVista {
             if(u.getTipo().equals("Auxiliar")){
                 extContext.getSessionMap().put("tipo", "Auxiliar");
                 extContext.getSessionMap().put("usuario", u);
-                extContext.redirect(url);                
+                extContext.redirect(urlAuxiliar);                
             }
             else{
                if(u.getTipo().equals("Monitor")){
                     extContext.getSessionMap().put("tipo", "Monitor");
                     extContext.getSessionMap().put("usuario", u);
-                    extContext.redirect(url);                   
+                    extContext.redirect(urlMonitor);                   
                }
                else{
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Usuario NO existe."));                   
