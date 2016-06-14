@@ -23,10 +23,10 @@ public class PrestamoLogica implements PrestamoLogicaLocal {
     
     @Override
     public void registrarPrestamo(Prestamo prestamo) throws Exception {
-        if(prestamo.getEstudiante() == null){
+        if(prestamo.getEstudiante().getCodigo() == null){
             throw new Exception("Debes seleccionar un Estudiante.");
         }
-        if(prestamo.getEquipo() == null){
+        if(prestamo.getEquipo().getReferencia() == null){
             throw new Exception("Debes seleccionar un Equipo.");
         }
         
@@ -41,8 +41,11 @@ public class PrestamoLogica implements PrestamoLogicaLocal {
     }
 
     @Override
-    public void modificarPrestamo(Prestamo prestamo) throws Exception {        
-        prestamoDAO.edit(prestamo);
+    public void modificarPrestamo(Prestamo prestamo) throws Exception {
+        Prestamo objPrestamo = prestamoDAO.find(prestamo.getPrestamoPK());
+        objPrestamo.setFechadevolucion(prestamo.getFechadevolucion());
+        objPrestamo.setObservaciones(prestamo.getObservaciones());
+        prestamoDAO.edit(objPrestamo);
     }
 
     @Override
