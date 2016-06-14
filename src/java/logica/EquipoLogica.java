@@ -41,7 +41,13 @@ public class EquipoLogica implements EquipoLogicaLocal {
     public void modificarEquipo(Equipo equipo) throws Exception {
         if(equipo.getEstado().equals("Seleccione")){
             throw new Exception("Debes seleccionar el estado actual del Equipo.");
-        }        
+        }
+        
+        Equipo objEquipo = equipoDAO.find(equipo.getReferencia());
+        
+        if(objEquipo.getPrestamoList().size() > 0){
+            throw new Exception("No se puede modificar la información del Equipo hasta que éste sea devuelto.");
+        }
         
         equipoDAO.edit(equipo);
     }
@@ -58,6 +64,21 @@ public class EquipoLogica implements EquipoLogicaLocal {
     }
 
     @Override
+    public void evaluarEstadoEquipo(Equipo equipo) throws Exception {
+        Equipo objEquipo = equipoDAO.find(equipo.getReferencia());        
+        
+        if(objEquipo.getEstado().equals("Mantenimiento")){
+            throw new Exception("El Equipo se encuentra en Mantenimiento.");
+        }
+        if(objEquipo.getEstado().equals("Dañado")){
+            throw new Exception("El Equipo se encuentra Dañado.");
+        }
+        if(objEquipo.getEstado().equals("En Préstamo")){
+            throw new Exception("El Equipo ya se encuentra En Préstamo.");
+        }
+    }      
+    
+    @Override
     public Equipo consultarxReferencia(String referencia) throws Exception {
         return equipoDAO.find(referencia);
     }
@@ -69,4 +90,5 @@ public class EquipoLogica implements EquipoLogicaLocal {
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
+
 }

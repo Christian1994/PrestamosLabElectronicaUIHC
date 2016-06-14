@@ -227,10 +227,12 @@ public class PrestamoVista {
             PrestamoPK objPrestamoPK = new PrestamoPK(objEstudiante.getCodigo(), objEquipo.getReferencia());
             objPrestamo.setPrestamoPK(objPrestamoPK);
             objPrestamo.setEstudiante(objEstudiante);
-            objPrestamo.setEquipo(objEquipo);
+            objEquipo.setEstado("En Préstamo");
+            objPrestamo.setEquipo(objEquipo);            
             objPrestamo.setFechadevolucion(txtFechaDevolucion);
             objPrestamo.setObservaciones(this.txtObservaciones.getValue().toString());
             
+            equipoLogica.evaluarEstadoEquipo(objEquipo);            
             prestamoLogica.registrarPrestamo(objPrestamo);
             listaPrestamos = null;
             limpiar();
@@ -255,7 +257,6 @@ public class PrestamoVista {
             PrestamoPK objPrestamoPK = new PrestamoPK(objEstudiante.getCodigo(), objEquipo.getReferencia());
             objPrestamo.setPrestamoPK(objPrestamoPK);
             objPrestamo.setEstudiante(objEstudiante);
-            objPrestamo.setEquipo(objEquipo);
             objPrestamo.setFechadevolucion(txtFechaDevolucion);
             objPrestamo.setObservaciones(this.txtObservaciones.getValue().toString());
             
@@ -283,7 +284,7 @@ public class PrestamoVista {
             PrestamoPK objPrestamoPK = new PrestamoPK(objEstudiante.getCodigo(), objEquipo.getReferencia());
             objPrestamo.setPrestamoPK(objPrestamoPK);
             objPrestamo.setEstudiante(objEstudiante);
-            objPrestamo.setEquipo(objEquipo);
+            objPrestamo.setEquipo(objEquipo);            
             objPrestamo.setFechadevolucion(txtFechaDevolucion);
             objPrestamo.setObservaciones(this.txtObservaciones.getValue().toString());
             

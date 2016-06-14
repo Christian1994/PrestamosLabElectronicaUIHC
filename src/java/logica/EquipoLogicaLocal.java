@@ -19,6 +19,7 @@ public interface EquipoLogicaLocal {
     public void registrarEquipo(Equipo equipo) throws Exception;
     public void modificarEquipo(Equipo equipo) throws Exception;
     public void eliminarEquipo(Equipo equipo) throws Exception;
+    public void evaluarEstadoEquipo(Equipo equipo) throws Exception;
     public Equipo consultarxReferencia(String referencia) throws Exception;
     public List<Equipo> consultarInventario() throws Exception;
     
