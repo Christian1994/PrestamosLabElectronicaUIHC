@@ -58,7 +58,7 @@ public class EquipoLogica implements EquipoLogicaLocal {
         Equipo objEquipo = equipoDAO.find(equipo.getReferencia());
         
         if(objEquipo.getPrestamoList().size() > 0){
-            throw new Exception("El Equipo está prestado. Podrá ser eliminado del Inventario cuando el préstamo se elimine primero.");
+            throw new Exception("El Equipo está prestado. Podrá ser eliminado del Inventario cuando éste se elimine primero.");
         }
         
         equipoDAO.remove(equipo);
