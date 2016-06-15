@@ -227,13 +227,13 @@ public class PrestamoVista {
             PrestamoPK objPrestamoPK = new PrestamoPK(objEstudiante.getCodigo(), objEquipo.getReferencia());
             objPrestamo.setPrestamoPK(objPrestamoPK);
             objPrestamo.setEstudiante(objEstudiante);
-            objEquipo.setEstado("En Préstamo");
             objPrestamo.setEquipo(objEquipo);            
             objPrestamo.setFechadevolucion(txtFechaDevolucion);
             objPrestamo.setObservaciones(this.txtObservaciones.getValue().toString());
             
             equipoLogica.evaluarEstadoEquipo(objEquipo);            
             prestamoLogica.registrarPrestamo(objPrestamo);
+            equipoLogica.cambiarEstadoEquipo(objEquipo);            
             listaPrestamos = null;
             limpiar();
             
@@ -289,6 +289,7 @@ public class PrestamoVista {
             objPrestamo.setObservaciones(this.txtObservaciones.getValue().toString());
             
             prestamoLogica.eliminarPrestamo(objPrestamo);
+            equipoLogica.cambiarEstadoEquipo(objEquipo);
             listaPrestamos = null;
             limpiar();
             

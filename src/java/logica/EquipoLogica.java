@@ -45,8 +45,8 @@ public class EquipoLogica implements EquipoLogicaLocal {
         
         Equipo objEquipo = equipoDAO.find(equipo.getReferencia());
         
-        if(objEquipo.getPrestamoList().size() > 0){
-            throw new Exception("No se puede modificar la información del Equipo hasta que éste sea devuelto.");
+        if(objEquipo.getEstado().equals("En Préstamo")){
+            throw new Exception("No se puede modificar el estado del Equipo hasta que éste sea devuelto.");
         }
         else{
             equipoDAO.edit(equipo);            
@@ -78,6 +78,20 @@ public class EquipoLogica implements EquipoLogicaLocal {
             throw new Exception("El Equipo ya se encuentra En Préstamo.");
         }
     }      
+
+    @Override
+    public void cambiarEstadoEquipo(Equipo equipo) throws Exception {
+        Equipo objEquipo = equipoDAO.find(equipo.getReferencia());
+        
+        if(objEquipo.getEstado().equals("Disponible")){
+            objEquipo.setEstado("En Préstamo");
+            equipoDAO.edit(objEquipo);
+        }
+        else if(objEquipo.getEstado().equals("En Préstamo")){
+            objEquipo.setEstado("Disponible");
+            equipoDAO.edit(objEquipo);
+        }
+    }    
     
     @Override
     public Equipo consultarxReferencia(String referencia) throws Exception {
